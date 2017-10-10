@@ -1,0 +1,15 @@
+---
+- name: ansible-quagga | Reinicia o zebra
+  service:
+    name: zebra
+    state: restarted
+
+- name: ansible-quagga | Reinicia o ospfd
+  service:
+    name: ospfd
+    state: restarted
+
+- name: ansible-quagga | Reinicia o bgpd
+  service:
+    name: bgpd
+    state: restarted

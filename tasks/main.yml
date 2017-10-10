@@ -1,0 +1,62 @@
+---
+- name: ansible-quagga | Instala pacotes
+  apt:
+    update_cache: yes
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - quagga
+    - quagga-doc
+
+- name: ansible-quagga | Configura daemons para inicializarem no boot
+  service:
+    name: "{{ item }}"
+    enabled: yes
+  with_items:
+    - zebra
+    - ospfd
+    - bgpd
+
+- name: ansible-quagga | Cria arquivo de log
+  copy:
+    content: ""
+    dest: "{{ quagga_logfile }}"
+    force: no
+    owner: quagga
+    group: quaggavty
+    mode: 0640
+
+- name: ansible-quagga | Copia arquivo de configuracao vtysh.conf
+  template:
+    src: "{{ quagga_vtysh_conf_file }}"
+    dest: "/etc/quagga/vtysh.conf"
+    owner: quagga
+    group: quaggavty
+    mode: 0640
+    
+- name: ansible-quagga | Copia arquivo de configuracao zebra.conf
+  template:
+    src: "{{ quagga_zebra_conf_file }}"
+    dest: "/etc/quagga/zebra.conf"
+    owner: quagga
+    group: quagga
+    mode: 0640
+  notify: ansible-quagga | Reinicia o zebra
+    
+- name: ansible-quagga | Copia arquivo de configuracao bgpd.conf
+  template:
+    src: "{{ quagga_bgpd_conf_file }}"
+    dest: "/etc/quagga/bgpd.conf"
+    owner: quagga
+    group: quagga
+    mode: 0640
+  notify: ansible-quagga | Reinicia o bgpd
+
+- name: ansible-quagga | Copia arquivo de configuracao ospfd.conf
+  template:
+    src: "{{ quagga_ospfd_conf_file }}"
+    dest: "/etc/quagga/ospfd.conf"
+    owner: quagga
+    group: quagga
+    mode: 0640
+  notify: ansible-quagga | Reinicia o ospfd

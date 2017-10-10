@@ -1,0 +1,9 @@
+!
+hostname zebra_{{quagga_hostname}}
+password {{quagga_password}}
+enable password {{quagga_password}}
+log file {{quagga_logfile}}
+log stdout
+ip forwarding
+line vty
+!
